@@ -18,7 +18,7 @@ public enum GridLight {
     private static var streams = [Combine.AnyCancellable]()
 
     public static func loadScene() throws -> GridLight.Scene {
-        guard let realityFileURL = Foundation.Bundle(for: GridLight.Scene.self).url(forResource: "GridLight", withExtension: "reality") else {
+        guard let realityFileURL = Bundle.module.url(forResource: "GridLight", withExtension: "reality") else {
             throw GridLight.LoadRealityFileError.fileNotFound("GridLight.reality")
         }
 

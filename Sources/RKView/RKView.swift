@@ -63,10 +63,10 @@ public class RKView : ARView {
 
         scene.addAnchor(excludedAnchor)
         
-        guard let sky = try? EnvironmentResource.load(named: "ibl") else {
+        guard let sky = try? EnvironmentResource.load(named: "ibl", in: Bundle.module) else {
             fatalError("Cannot load sky")
         }
-        guard let lighting = try? EnvironmentResource.load(named: "ref") else {
+        guard let lighting = try? EnvironmentResource.load(named: "ref", in: Bundle.module) else {
             fatalError("Cannot load sky")
         }
 
