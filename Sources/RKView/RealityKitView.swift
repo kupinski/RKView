@@ -19,6 +19,10 @@ public struct RealityKitView : NSViewControllerRepresentable {
     public func updateNSViewController(_ nsViewController: RKViewController, context: NSViewControllerRepresentableContext<RealityKitView>) {
     }
     
+    public init(view: RKView) {
+        self.rkView = view
+    }
+    
 }
 
 @available(macOSApplicationExtension 10.15, *)
