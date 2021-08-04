@@ -22,8 +22,8 @@ let package = Package(
             name: "RKView",
             resources: [
                 .process("GridLight.reality"),
-                .process("lighting.skybox"),
-                .process("test.skybox")]),
+                .process("ref.realityenv"),
+                .process("ibl.realityenv")]),
         .testTarget(
             name: "RKViewTests",
             dependencies: ["RKView"]),
