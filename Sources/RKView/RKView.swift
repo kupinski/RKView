@@ -1,4 +1,3 @@
-import Cocoa
 import RealityKit
 import SwiftUI
 
@@ -90,6 +89,7 @@ public class RKView : ARView {
         cameraEntity.look(at: at ?? lookAt, from: from ?? lookFrom, relativeTo: nil)
     }
     
+    #if os(macOS)
     public override func mouseDown(with event: NSEvent) {
     }
     
@@ -114,6 +114,39 @@ public class RKView : ARView {
         cameraEntity.look(at: lookAt, from: lookFrom, relativeTo: nil)
     }
     
+    #elseif os(iOS)
+    @objc func handlePinch(sender: UIPinchGestureRecognizer) {
+      let scale = sender.scale
+      print("scale \(scale)")
+    }
+    
+    @objc func handleTap(sender: UITapGestureRecognizer) {
+      let location = sender.location(in: self)
+        print("tap \(location)")
+    }
+    
+    @objc func handlePan(sender: UIPanGestureRecognizer) {
+
+      let translation = sender.translation(in: self)
+      let location = sender.location(in: self)
+      
+      sender.setTranslation(.zero, in: self)
+        print("pan \(location) \(translation)")
+    }
+    
+    @objc func handleSwipe(sender: UISwipeGestureRecognizer) {
+      if sender.direction == .left {
+        let location = sender.location(in: self)
+          print("left \(location)")
+      } else {
+        if sender.direction == .right {
+          let location = sender.location(in: self)
+            print("right \(location)")
+        }
+      }
+    }
+
+    #endif
     
 }
 

@@ -1,16 +1,7 @@
 import Foundation
 import SwiftUI
 import RealityKit
-//#if os(iOS)
-//import UIKit
-//#endif
 
-#if os(iOS)
-@available(iOS 13, *)
-public struct RealityKitView: UIViewControllerRepresentable {
-    
-}
-#endif
 
 #if os(macOS)
 /// A SwiftUI View that controls an``RKView`` for viewing a RealityKit scene without any augmented reality applications and allowing for mouse or touch camera controls.
@@ -36,7 +27,7 @@ public struct RealityKitView : NSViewControllerRepresentable {
     
 }
 
-@available(macOSApplicationExtension 10.15, *)
+@available(macOS 10.15, *)
 public class RKViewController: NSViewController {
     public var rkView: RKView
     
@@ -76,3 +67,4 @@ public class RKViewController: NSViewController {
     
 }
 #endif
+
