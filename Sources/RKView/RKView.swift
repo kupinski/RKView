@@ -9,7 +9,7 @@ private extension FloatingPoint {
 }
 
 /// An `RKView` is a RealityKit View that is NOT going to be used in Augmented Reality applications.  This view was created as a replacement for SceneKit views that has the .allowCameraControl property.  This currently doesn't exist in `ARView`.  In `RKView` a camera is created and it's placement and focus are based on the entities in the scene.
-@available(macOSApplicationExtension 10.15, *)
+@available(iOS 13.0, macOS 10.15, *)
 public class RKView : ARView {
     /// The AnchorEntity that holds the camera and the floor.  The camera needs to be in its own anchor separate from the rest of the scene.  This anchor is excluded from some of the calculations regarding the scene extent.
     public var excludedAnchor = AnchorEntity(world: [0, 0, 0])
