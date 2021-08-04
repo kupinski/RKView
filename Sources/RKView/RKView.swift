@@ -1,6 +1,119 @@
-public struct RKView {
-    public private(set) var text = "Hello, World!"
+import Cocoa
+import RealityKit
+import SwiftUI
 
-    public init() {
+private extension FloatingPoint {
+    func clamped(to range: ClosedRange<Self>) -> Self {
+        return max(min(self, range.upperBound), range.lowerBound)
     }
 }
+
+/// An `RKView` is a RealityKit View that is NOT going to be used in Augmented Reality applications.  This view was created as a replacement for SceneKit views that has the .allowCameraControl property.  This currently doesn't exist in `ARView`.  In `RKView` a camera is created and it's placement and focus are based on the entities in the scene.
+@available(macOSApplicationExtension 10.15, *)
+public class RKView : ARView {
+    /// The AnchorEntity that holds the camera and the floor.  The camera needs to be in its own anchor separate from the rest of the scene.  This anchor is excluded from some of the calculations regarding the scene extent.
+    public var excludedAnchor = AnchorEntity(world: [0, 0, 0])
+    /// The camera entity
+    public var cameraEntity = PerspectiveCamera()
+    
+    public var floorEntity = try! GridLight.loadScene()
+    
+    /// The point that the camera is looking at.  Starts at origin but is changed in viewDidLoad to the center of the scene
+    public var lookAt = SIMD3<Float>(0.0, 0.0, 0.0)
+    /// The distance from the center of focus to the camera.  Starts at 1.5m but is changed in viewDidLoad
+    public var radius = 2.0
+    /// The location of the camera. This is a computed property that utilizes, ``lookAt``, ``radius``, ``theta``, and ``phi``
+    public var lookFrom: SIMD3<Float> {
+        return lookAt + SIMD3<Float>(Float(radius * sin(phi) * cos(theta)),
+                                     Float(radius * cos(phi)),
+                                     Float(radius * sin(phi) * sin(theta)))
+    }
+    /// The angle in the x-z-plane.  Ranges from 0 to 2π
+    public var theta = 0.0
+    /// The tilt of the camera.  0 is looking down.  π/2 is looking horizonal.  Ranges from 0 to π
+    public var phi = Angle(degrees: 75.0).radians
+    
+    /// Units are radians/pixel.  This controls how fast angles changes when the user modifies ``theta`` and ``phi`` using drag gestures
+    public var angleFactor = 0.01
+    
+    /// Units are m/pixel.  This controls how fast the camera moves when the user pans/
+    public var dragFactor = 0.01
+    
+    /// Units are m/pixel.  This controls how much the camera zooms when the user does a pinch control.
+    public var zoomFactor = 1.0
+    
+    // Units are meters.  Starts out at 20 but is modified in viewDidLoad based on the scene.  This determine how far away from the primary scene you can move the camera.
+    public var sceneRadius = 20.0
+    
+    public var showFloor: Bool = false {
+        didSet {
+            floorEntity.isEnabled = showFloor
+        }
+    }
+    
+    /// Create an RKView based on the provided frame.  Typically this is set to .zero and resized later
+    /// - Parameter frame: Typically this is set to .zero and resized later
+    public required init(frame: CGRect) {
+        super.init(frame: frame)
+        excludedAnchor.addChild(cameraEntity)
+        excludedAnchor.addChild(floorEntity)
+        
+        cameraEntity.position = lookFrom
+        cameraEntity.look(at: lookAt, from: lookFrom, relativeTo: nil)
+
+        scene.addAnchor(excludedAnchor)
+        
+        guard let sky = try? EnvironmentResource.load(named: "ibl") else {
+            fatalError("Cannot load sky")
+        }
+        guard let lighting = try? EnvironmentResource.load(named: "ref") else {
+            fatalError("Cannot load sky")
+        }
+
+        self.environment.lighting.resource = lighting
+        self.environment.background = .skybox(sky)
+        
+        // This is a hack to get rid of the gradient on the floor.  Not going to use it.  I need to get a better floor model.
+//        print(floorEntity)
+//        let z = floorEntity.findEntity(named: "Grid_Large_Vertical")!
+//        let newModel = ModelEntity(mesh: (z.components[ModelComponent.self]! as! ModelComponent).mesh, materials: [SimpleMaterial(color: .white, isMetallic: false)])
+//        floorEntity.isEnabled = false
+//        excludedAnchor.addChild(newModel)
+
+    }
+    
+    @MainActor @objc required dynamic init?(coder decoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    public func look(at: SIMD3<Float>? = nil, from: SIMD3<Float>? = nil) {
+        cameraEntity.look(at: at ?? lookAt, from: from ?? lookFrom, relativeTo: nil)
+    }
+    
+    public override func mouseDown(with event: NSEvent) {
+    }
+    
+    public override func mouseDragged(with event: NSEvent) {
+        theta += event.deltaX * angleFactor
+        phi -= event.deltaY * angleFactor
+        phi = phi.clamped(to: Double(2.0 * Float.ulpOfOne)...Double.pi)
+
+        cameraEntity.look(at: lookAt, from: lookFrom, relativeTo: nil)
+    }
+    
+    public override func magnify(with event: NSEvent) {
+        radius += event.magnification * -zoomFactor
+        radius = radius.clamped(to: Double(Float.ulpOfOne)...sceneRadius)
+        cameraEntity.look(at: lookAt, from: lookFrom, relativeTo: nil)
+    }
+    
+    public override func scrollWheel(with event: NSEvent) {
+        lookAt += SIMD3<Float>(Float(-dragFactor * event.deltaX * sin(theta)),
+                               Float(event.deltaY * dragFactor),
+                               Float(dragFactor * event.deltaX * cos(theta)))
+        cameraEntity.look(at: lookAt, from: lookFrom, relativeTo: nil)
+    }
+    
+    
+}
+

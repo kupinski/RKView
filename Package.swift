@@ -20,7 +20,10 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "RKView",
-            dependencies: []),
+            resources: [
+                .process("GridLight.reality"),
+                .process("lighting.skybox"),
+                .process("test.skybox")]),
         .testTarget(
             name: "RKViewTests",
             dependencies: ["RKView"]),
