@@ -1,82 +1,70 @@
 import Foundation
 import SwiftUI
 import RealityKit
-
-
-#if os(iOS)
-struct newView: UIViewRepresentable {
-  @State var direction = ""
-
-  typealias UIViewType = UIView
-  var v = UIView()
-
-  func updateUIView(_ uiView: UIView, context: Context) {
-    v.backgroundColor = UIColor.yellow
-  }
-  
-  func makeUIView(context: Context) -> UIView {
-      let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(RKView.handleTap(sender:)))
-//    let panGesture = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handlePan(sender:)))
-      let pinchGesture = UIPinchGestureRecognizer(target: context.coordinator, action: #selector(RKView.handlePinch(sender:)))
-      let leftSwipe = UISwipeGestureRecognizer(target: context.coordinator, action: #selector(RKView.handleSwipe(sender:)))
-    leftSwipe.direction = .left
-    let rightSwipe = UISwipeGestureRecognizer(target: context.coordinator, action: #selector(RKView.handleSwipe(sender:)))
-    rightSwipe.direction = .right
-    
-    
-//    v.addGestureRecognizer(panGesture)
-    v.addGestureRecognizer(pinchGesture)
-    v.addGestureRecognizer(tapGesture)
-    v.addGestureRecognizer(leftSwipe)
-    v.addGestureRecognizer(rightSwipe)
-    return v
-    }
-    
-//  func makeCoordinator() -> newView.Coordinator {
-//    Coordinator(v)
+//
+//
+//#if os(iOS)
+//struct newView: UIViewRepresentable {
+//  @State var direction = ""
+//
+//  typealias UIViewType = UIView
+//  var v = UIView()
+//
+//  func updateUIView(_ uiView: UIView, context: Context) {
+//    v.backgroundColor = UIColor.yellow
 //  }
-  
-}
-
+//  
+//  func makeUIView(context: Context) -> UIView {
+//      let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(RKView.handleTap(sender:)))
+////    let panGesture = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handlePan(sender:)))
+//      let pinchGesture = UIPinchGestureRecognizer(target: context.coordinator, action: #selector(RKView.handlePinch(sender:)))
+//      let leftSwipe = UISwipeGestureRecognizer(target: context.coordinator, action: #selector(RKView.handleSwipe(sender:)))
+//    leftSwipe.direction = .left
+//    let rightSwipe = UISwipeGestureRecognizer(target: context.coordinator, action: #selector(RKView.handleSwipe(sender:)))
+//    rightSwipe.direction = .right
+//    
+//    
+////    v.addGestureRecognizer(panGesture)
+//    v.addGestureRecognizer(pinchGesture)
+//    v.addGestureRecognizer(tapGesture)
+//    v.addGestureRecognizer(leftSwipe)
+//    v.addGestureRecognizer(rightSwipe)
+//    return v
+//    }
+//    
+////  func makeCoordinator() -> newView.Coordinator {
+////    Coordinator(v)
+////  }
+//  
+//}
+//
 @available(iOS 13, *)
 public struct RealityKitView: UIViewControllerRepresentable {
+    public typealias UIViewControllerType = RKViewController
+
     public var rkView: RKView
 
     
     public func makeUIViewController(context: Context) -> RKViewController {
-        return RKViewController(withARView: rkView)
+        return RKViewController(withRKView: rkView)
     }
     
     public func updateUIViewController(_ uiViewController: RKViewController, context: Context) {
-        var boundingBox = BoundingBox()
-        for anch in rkView.scene.anchors {
-            if (anch != rkView.excludedAnchor) {
-                boundingBox.formUnion(anch.visualBounds(recursive: true, relativeTo: nil, excludeInactive: true))
-            }
-        }
         
-        rkView.radius = 2.0 * Double(boundingBox.boundingRadius)
-        rkView.lookAt = boundingBox.center
-        rkView.dragFactor = 0.01 / 2.0 * rkView.radius
-        rkView.zoomFactor = 1.0 / 2.0 * rkView.radius
-        
-        rkView.look()
-
     }
     
-    public typealias UIViewControllerType = RKViewController
     
     
 }
     
     
 
-@available(iOS 10.15, *)
+@available(iOS 13, *)
 public class RKViewController: UIViewController {
     public var rkView: RKView
     
-    public init(withARView: RKView) {
-        rkView = withARView
+    public init(withRKView: RKView) {
+        rkView = withRKView
         super.init(nibName: nil, bundle: nil)
         
     }
@@ -110,4 +98,4 @@ public class RKViewController: UIViewController {
     }
     
 }
-#endif
+//#endif
