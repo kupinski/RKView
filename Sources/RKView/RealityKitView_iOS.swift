@@ -3,7 +3,7 @@ import SwiftUI
 import RealityKit
 //
 //
-//#if os(iOS)
+#if os(iOS)
 //struct newView: UIViewRepresentable {
 //  @State var direction = ""
 //
@@ -39,22 +39,41 @@ import RealityKit
 //}
 //
 @available(iOS 13, *)
-public struct RealityKitView: UIViewControllerRepresentable {
-    public typealias UIViewControllerType = RKViewController
 
+
+public struct RealityKitView: UIViewRepresentable {
+    
+    public typealias UIViewType = RKView
     public var rkView: RKView
 
     
-    public func makeUIViewController(context: Context) -> RKViewController {
-        return RKViewController(withRKView: rkView)
+    public class Coordinator: NSObject {
+        public var rkView: RKView
+        
+        public init(rkView: RKView) {
+            self.rkView = rkView
+        }
+        
+        @objc func triggerTouchAction(gestureReconizer: UITapGestureRecognizer) {
+            print("Hello, tap!")
+        }
+
+    }
+    public func makeUIView(context: Context) -> RKView {
+        let view = RKView(frame: .zero)
+        let gRecognizer = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.triggerTouchAction(gestureReconizer:)))
+        view.addGestureRecognizer(gRecognizer)
+
+        return(view)
     }
     
-    public func updateUIViewController(_ uiViewController: RKViewController, context: Context) {
+    public func updateUIView(_ uiView: RKView, context: Context) {
         
     }
     
-    
-    
+    public func makeCoordinator() -> Coordinator {
+        return(Coordinator(rkView: rkView))
+    }
 }
     
     
@@ -98,4 +117,4 @@ public class RKViewController: UIViewController {
     }
     
 }
-//#endif
+#endif
