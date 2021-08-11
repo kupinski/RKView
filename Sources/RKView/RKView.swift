@@ -96,7 +96,7 @@ public class RKView : ARView {
     public override func mouseDragged(with event: NSEvent) {
         theta += event.deltaX * angleFactor
         phi -= event.deltaY * angleFactor
-        phi = phi.clamped(to: Double(2.0 * Float.ulpOfOne)...Double.pi)
+        phi = phi.clamped(to: (-Double.pi / 2.0 + 0.00001)...(Double.pi / 2.0 - 0.00001))
 
         cameraEntity.look(at: lookAt, from: lookFrom, relativeTo: nil)
     }
