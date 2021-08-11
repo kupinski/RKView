@@ -23,14 +23,14 @@ public class RKView : ARView {
     public var radius = 2.0
     /// The location of the camera. This is a computed property that utilizes, ``lookAt``, ``radius``, ``theta``, and ``phi``
     public var lookFrom: SIMD3<Float> {
-        return lookAt + SIMD3<Float>(Float(radius * sin(phi) * sin(theta)),
-                                     Float(radius * cos(phi)),
-                                     Float(-radius * sin(phi) * cos(theta)))
+        return lookAt + SIMD3<Float>(Float(radius * cos(phi) * sin(theta)),
+                                     Float(radius * sin(phi)),
+                                     Float(-radius * cos(phi) * cos(theta)))
     }
     /// The angle in the x-z-plane.  Ranges from 0 to 2π
     public var theta = 0.0
     /// The tilt of the camera.  0 is looking down.  π/2 is looking horizonal.  Ranges from 0 to π
-    public var phi = Angle(degrees: 75.0).radians
+    public var phi = Angle(degrees: 15.0).radians
     
     /// Units are radians/pixel.  This controls how fast angles changes when the user modifies ``theta`` and ``phi`` using drag gestures
     public var angleFactor = 0.01
