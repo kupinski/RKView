@@ -23,9 +23,9 @@ public class RKView : ARView {
     public var radius = 2.0
     /// The location of the camera. This is a computed property that utilizes, ``lookAt``, ``radius``, ``theta``, and ``phi``
     public var lookFrom: SIMD3<Float> {
-        return lookAt + SIMD3<Float>(Float(radius * sin(phi) * cos(theta)),
+        return lookAt + SIMD3<Float>(Float(radius * sin(phi) * sin(theta)),
                                      Float(radius * cos(phi)),
-                                     Float(radius * sin(phi) * sin(theta)))
+                                     Float(-radius * sin(phi) * cos(theta)))
     }
     /// The angle in the x-z-plane.  Ranges from 0 to 2π
     public var theta = 0.0
