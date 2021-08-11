@@ -27,10 +27,10 @@ public class RKView : ARView {
                                      Float(radius * sin(phi)),
                                      Float(-radius * cos(phi) * cos(theta)))
     }
-    /// The angle in the x-z-plane.  Ranges from 0 to 2π
+    /// The angle in the x-z-plane.  Ranges from 0 to 2π.  0 is in the positive z direction
     public var theta = 0.0
-    /// The tilt of the camera.  0 is looking down.  π/2 is looking horizonal.  Ranges from 0 to π
-    public var phi = 0.0//Angle(degrees: 15.0).radians
+    /// The tilt of the camera.  0 is looking horizontal.  π/2 is looking down.  Ranges from -π/2 to π/2.
+    public var phi = Angle(degrees: 15.0).radians
     
     /// Units are radians/pixel.  This controls how fast angles changes when the user modifies ``theta`` and ``phi`` using drag gestures
     public var angleFactor = 0.01
@@ -112,7 +112,7 @@ public class RKView : ARView {
         deltaX -= dragFactor * event.deltaY * sin(theta) * sin(phi)
         let deltaY = event.deltaY * dragFactor * cos(phi)
         var deltaZ = dragFactor * event.deltaX * sin(theta) * cos(phi)
-        deltaZ += dragFactor * event.deltaY * cos(theta) * sin(phi) 
+        deltaZ += dragFactor * event.deltaY * cos(theta) * sin(phi)
         
         lookAt += SIMD3<Float>(Float(deltaX),
                                Float(deltaY),
