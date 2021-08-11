@@ -109,7 +109,7 @@ public class RKView : ARView {
     
     public override func scrollWheel(with event: NSEvent) {
         var deltaX = dragFactor * event.deltaX * cos(theta) * cos(phi)
-        deltaX -= dragFactor * event.deltaY * sin(phi) * cos(theta)
+        deltaX -= dragFactor * event.deltaY * sin(phi) * sin(theta)
         let deltaY = event.deltaY * dragFactor * cos(phi)
         var deltaZ = dragFactor * event.deltaX * sin(theta) * cos(phi)
         deltaZ -= dragFactor * event.deltaY * sin(phi) * cos(theta)
