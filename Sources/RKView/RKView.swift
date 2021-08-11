@@ -108,9 +108,15 @@ public class RKView : ARView {
     }
     
     public override func scrollWheel(with event: NSEvent) {
-        lookAt += SIMD3<Float>(Float(dragFactor * event.deltaX * cos(phi) * cos(theta)),
-                               Float(event.deltaY * dragFactor * cos(phi)),
-                               Float(dragFactor * event.deltaX * cos(phi) * sin(theta)))
+        var deltaX = dragFactor * event.deltaX * cos(theta)
+        deltaX += dragFactor * event.deltaY * sin(phi)
+        let deltaY = event.deltaY * dragFactor * cos(phi)
+        var deltaZ = dragFactor * event.deltaX * sin(theta)
+        deltaZ += event.deltaY * sin(phi)
+        
+        lookAt += SIMD3<Float>(Float(deltaX),
+                               Float(deltaY),
+                               Float(deltaZ))
         cameraEntity.look(at: lookAt, from: lookFrom, relativeTo: nil)
     }
     
