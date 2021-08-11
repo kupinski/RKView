@@ -30,7 +30,7 @@ public class RKView : ARView {
     /// The angle in the x-z-plane.  Ranges from 0 to 2π
     public var theta = 0.0
     /// The tilt of the camera.  0 is looking down.  π/2 is looking horizonal.  Ranges from 0 to π
-    public var phi = Angle(degrees: 15.0).radians
+    public var phi = 0.0//Angle(degrees: 15.0).radians
     
     /// Units are radians/pixel.  This controls how fast angles changes when the user modifies ``theta`` and ``phi`` using drag gestures
     public var angleFactor = 0.01
@@ -95,7 +95,7 @@ public class RKView : ARView {
     
     public override func mouseDragged(with event: NSEvent) {
         theta += event.deltaX * angleFactor
-        phi -= event.deltaY * angleFactor
+        phi += event.deltaY * angleFactor
         phi = phi.clamped(to: (-Double.pi / 2.0 + 0.00001)...(Double.pi / 2.0 - 0.00001))
 
         cameraEntity.look(at: lookAt, from: lookFrom, relativeTo: nil)
@@ -110,7 +110,7 @@ public class RKView : ARView {
     public override func scrollWheel(with event: NSEvent) {
         lookAt += SIMD3<Float>(Float(dragFactor * event.deltaX * cos(theta)),
                                Float(event.deltaY * dragFactor),
-                               Float(-dragFactor * event.deltaX * sin(theta)))
+                               Float(dragFactor * event.deltaX * sin(theta)))
         cameraEntity.look(at: lookAt, from: lookFrom, relativeTo: nil)
     }
     
