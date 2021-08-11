@@ -112,7 +112,7 @@ public class RKView : ARView {
         deltaX -= dragFactor * event.deltaY * sin(phi) * cos(theta)
         let deltaY = event.deltaY * dragFactor * cos(phi)
         var deltaZ = dragFactor * event.deltaX * sin(theta) * cos(phi)
-        deltaZ += dragFactor * event.deltaY * sin(phi) * cos(theta)
+        deltaZ -= dragFactor * event.deltaY * sin(phi) * cos(theta)
         
         lookAt += SIMD3<Float>(Float(deltaX),
                                Float(deltaY),
