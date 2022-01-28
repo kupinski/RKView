@@ -1,3 +1,3 @@
 # RKView
 
-A description of this package.
+A SwiftUI view for visualizing and interacting with a RealityKit view.  Just GUI stuff.
