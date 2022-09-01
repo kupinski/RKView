@@ -20,7 +20,7 @@ public class RKView : ARView {
     /// The point that the camera is looking at.  Starts at origin but is changed in viewDidLoad to the center of the scene
     public var lookAt = SIMD3<Float>(0.0, 0.0, 0.0)
     /// The distance from the center of focus to the camera.  Starts at 1.5m but is changed in viewDidLoad
-    public var radius = 2.0
+    public var radius = 1.0
     /// The location of the camera. This is a computed property that utilizes, ``lookAt``, ``radius``, ``theta``, and ``phi``
     public var lookFrom: SIMD3<Float> {
         return lookAt + SIMD3<Float>(Float(radius * cos(phi) * sin(theta)),

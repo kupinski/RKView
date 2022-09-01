@@ -57,8 +57,10 @@ public class RKViewController: NSViewController {
             }
         }
         
-        rkView.radius = 2.0 * Double(boundingBox.boundingRadius)
-        rkView.lookAt = boundingBox.center
+        if (boundingBox.boundingRadius != 0) {
+            rkView.radius = 2.0 * Double(boundingBox.boundingRadius)
+            rkView.lookAt = boundingBox.center
+        }
         rkView.dragFactor = 0.01 / 2.0 * rkView.radius
         rkView.zoomFactor = 1.0 / 2.0 * rkView.radius
         
