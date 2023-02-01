@@ -71,14 +71,6 @@ public class RKView : ARView {
 
         self.environment.lighting.resource = lighting
         self.environment.background = .skybox(sky)
-        
-        // This is a hack to get rid of the gradient on the floor.  Not going to use it.  I need to get a better floor model.
-//        print(floorEntity)
-//        let z = floorEntity.findEntity(named: "Grid_Large_Vertical")!
-//        let newModel = ModelEntity(mesh: (z.components[ModelComponent.self]! as! ModelComponent).mesh, materials: [SimpleMaterial(color: .white, isMetallic: false)])
-//        floorEntity.isEnabled = false
-//        excludedAnchor.addChild(newModel)
-
     }
     
     @MainActor @objc required dynamic init?(coder decoder: NSCoder) {
