@@ -86,10 +86,24 @@ public class RKView : ARView {
     }
     
     public override func mouseDragged(with event: NSEvent) {
-        theta += event.deltaX * angleFactor
-        phi += event.deltaY * angleFactor
-        phi = phi.clamped(to: (-Double.pi / 2.0 + 0.00001)...(Double.pi / 2.0 - 0.00001))
-
+        if (event.modifierFlags.contains(.shift)) && (!event.modifierFlags.contains(.control)) {
+            radius += event.deltaY * -angleFactor
+            radius = radius.clamped(to: Double(Float.ulpOfOne)...sceneRadius)
+        } else if (!event.modifierFlags.contains(.shift)) && (event.modifierFlags.contains(.control)) {
+            var deltaX = dragFactor * event.deltaX * cos(theta) * cos(phi)
+            deltaX -= dragFactor * event.deltaY * sin(theta) * sin(phi)
+            let deltaY = event.deltaY * dragFactor * cos(phi)
+            var deltaZ = dragFactor * event.deltaX * sin(theta) * cos(phi)
+            deltaZ += dragFactor * event.deltaY * cos(theta) * sin(phi)
+            
+            lookAt += SIMD3<Float>(Float(deltaX),
+                                   Float(deltaY),
+                                   Float(deltaZ))
+        } else {
+            theta += event.deltaX * angleFactor
+            phi += event.deltaY * angleFactor
+            phi = phi.clamped(to: (-Double.pi / 2.0 + 0.00001)...(Double.pi / 2.0 - 0.00001))
+        }
         cameraEntity.look(at: lookAt, from: lookFrom, relativeTo: nil)
     }
     
